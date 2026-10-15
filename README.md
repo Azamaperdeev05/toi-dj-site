@@ -1,56 +1,75 @@
-# 🍏 TOI DJ — Ресми Apple-Стиліндегі Таныстыру Сайты
+# TOI DJ PRO — Ресми Веб-Сайт және Интерактивті Симулятор (website)
 
-> **Қазақ тойлары мен іс-шараларына арналған мамандандырылған заманауи ашық диджей бағдарламасының ресми веб-сайты.**
+Бұл бумада TOI DJ PRO жүйесінің ресми промо-сайты және десктоп бағдарламасының интерфейсін 1:1 дәлдікпен қайталайтын онлайн интерактивті жұмыс станциясы орналасқан.
 
-<p align="center">
-  <img src="images/toi-dj-full.png" alt="TOI DJ Interface" width="100%" style="border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.6);" />
-</p>
-
-<p align="center">
-  <a href="https://azamaperdeev05.github.io/toi-dj/"><img src="https://img.shields.io/badge/🌐_Live_Demo-GitHub_Pages-2997ff?style=for-the-badge&logo=safari" alt="Live Demo" /></a>
-  <a href="https://github.com/Azamaperdeev05/toi-dj/releases/latest"><img src="https://img.shields.io/badge/Download-TOI_DJ_v1.1.0-white?style=for-the-badge&logo=apple" alt="Download" /></a>
-  <a href="https://github.com/Azamaperdeev05/toi-dj"><img src="https://img.shields.io/badge/Main_Repo-Azamaperdeev05%2Ftoi--dj-black?style=for-the-badge&logo=github" alt="Main Repo" /></a>
-</p>
+Ресми домен: [https://toidj.vercel.app](https://toidj.vercel.app)
 
 ---
 
-## 🌐 Тікелей Сілтемелер (Live Links)
+## 1. Технологиялық Стек
 
-- 🚀 **Ресми Сайт:** [https://azamaperdeev05.github.io/toi-dj/](https://azamaperdeev05.github.io/toi-dj/)
-- 💻 **Негізгі Бағдарлама Репозиторийі:** [github.com/Azamaperdeev05/toi-dj](https://github.com/Azamaperdeev05/toi-dj)
-- 🍏 **macOS DMG Жүктеу (v1.1.0):** [TOI-DJ-1.1.0-macOS-arm64.dmg](https://github.com/Azamaperdeev05/toi-dj/releases/latest/download/TOI-DJ-1.1.0-macOS-arm64.dmg)
-
----
-
-## ✨ Сайттың Мүмкіндіктері (Features)
-
-1. **Apple Dark Aesthetic:** SF Pro / Plus Jakarta Sans қарпі, Glassmorphism (blur) эффектілері, терең қара градиенттер және Bento Grid стилі.
-2. **Интерактивті Spacebar Демосы:** Пернетақтадағы немесе экрандағы Пробелді басқанда тікелей Web Audio API арқылы ырғақ қосылады/тоқтайды және визуалды толқын (Waveform) қимылдайды.
-3. **Сахналық Отбивкалар Пульті (Soundboard):** Фанфар, Шымкент шапалақ тушы, Ет келгендегі туш, Күлкі сияқты той дыбыстарын сайттан тікелей тыңдау мүмкіндігі.
-4. **12 Той Кезеңі:** Батадан қоштасуға дейінгі кезеңдер тізімі мен `Alt+1..=` жедел пернелер жүйесі.
-5. **Мультиплатформа:** macOS (Apple Silicon M1-M4 & Intel), Windows 10/11 және Linux жүйелері үшін орнату нұсқаулықтары.
+- **Құрастыру жүйесі:** Vite (Client Environment);
+- **Құрылымы мен логикасы:** Таза HTML5, модульдік Vanilla JavaScript (ES Modules);
+- **Дизайн жүйесі:** VirtualDJ және AIMP аппараттық палитрасына негізделген Vanilla CSS (Zero-framework, 60 FPS);
+- **Дыбыс қозғалтқышы:** Web Audio API (`AudioContext`, `GainNode`, `OscillatorNode`) және HTML5 Audio;
+- **Бұлттық интеграция:** Supabase JS Client (`@supabase/supabase-js`) — пайдаланушыларды тіркеу және лицензия мәртебесін тексеру;
+- **Хостинг және орналастыру:** Vercel Production Serverless Platform.
 
 ---
 
-## 🛠️ Жергілікті іске қосу (Local Setup)
+## 2. Интерактивті Симулятор Құрылымы
 
-Бұл сайт таза HTML5, CSS3 және Vanilla JavaScript (Web Audio API) арқылы жасалған. Ешқандай күрделі құрастырушыны (Node.js/Webpack) қажет етпейді:
+Симулятор браузерде бағдарламаның нақты жұмыс үстеліндегі көрінісін толық береді:
 
+### 2.1 Сол жақ блок — AIMP Playlist Engine
+- **Фирмалық AIMP тақтасы:** Қызғылт-сары AIMP эмблемасы, ТОЙ ӘНДЕРІ және БАСҚА қалталар бөлімі;
+- **Ағымдағы трек карточкасы:** `001 MIX — Той әні`, `MP3 | 320 KBPS | 44.1 KHZ` аудио пішім тегтері, көгілдір цифрлық таймер (`00:00`);
+- **Транспорттық батырмалар:** Артқа, Ойнату (қызғылт-сары шеңбер), Алға, Қайталау, Тоқтату;
+- **Келесі трек белгісі:** `КЕЛЕСІ: 01 MashUP`;
+- **Нақты плейлист тізімі:** 9 шынайы той трегі (ойнату, уақыт көрсеткіші, таңдау).
+
+### 2.2 Оң жақ блок — 64-Пэдті Аппараттық Сэмплер (8x8 тор)
+- **Белсенді банк индикаторы:** `new bank (7) (63)`;
+- **Жоғарғы батырмалар:** `+ ФАЙЛ ҚОСУ`, `ӨШІРУ РЕЖИМІ`, `БАСТАПҚЫ КҮЙ`, `ТАЗАРТУ`;
+- **64 ұяшықтан тұратын матрица:**
+  - 1..56 ұяшықтар: нақты дыбыстары бар сэмплдер (Ойхой, Чапалақ, Мистер Пропер, Облом, Джеки Чан, Дөмбыра туш, Тайт-тай және т.б.);
+  - 57..64 ұяшықтар: жаңа файлдарға арналған бос аппараттық слоттар.
+- **Ойнату және Тоқтату (Toggle Play / Stop):**
+  - Пэд басылғанда аудио ойнап, пэд көк/көгілдір түске боялады (`#16323E` фоны, `#00E5FF` жиегі және жасыл жарықдиод);
+  - Қалған уақыт кері санағы қосылады (мысалы: `-02.4s`);
+  - Ойнап тұрған сэмплді қайта басқанда ойнату дереу тоқтайды;
+  - Аудио табиғи соңына жеткенде пэд өздігінен бастапқы сұр түсіне оралады.
+
+### 2.3 Жоғарғы Master басқару тақтасы
+- macOS терезе басқару нүктелері және жүйелік тақырып;
+- `TRIAL (30 күн қалды)` лицензия көрсеткіші және `azamatperdeev` аккаунты;
+- `Телефонмен қосылу: 192.168.1.75:8080` желілік мекенжай индикаторы;
+- `MASTER` дыбыс реттегіші (85%) және барлық сэмплдерді шұғыл сөндіретін қызыл `ТОҚТАТУ (STOP ALL)` батырмасы.
+
+### 2.4 16-Жолақты Спектрлік Анализатор
+- Музыка мен сэмплдер ойналған кезде жиіліктер толқынын жасыл-сары-қызыл сегменттермен және шыңдық нүктелермен (peak dots) 60 FPS жиілікте көрсететін HTML5 Canvas анализаторы.
+
+---
+
+## 3. Жергілікті Әзірлеу және Орналастыру
+
+### Тәуелділіктерді орнату
 ```bash
-git clone https://github.com/Azamaperdeev05/toi-dj-site.git
-cd toi-dj-site
-open index.html
+cd website
+npm install
 ```
 
-немесе кез келген жергілікті сервер арқылы:
-
+### Әзірлеуші серверін іске қосу
 ```bash
-npx serve .
+npm run dev
 ```
 
----
+### Өндірістік пакетті жинау (Production Build)
+```bash
+npm run build
+```
 
-## 👤 Автор және Лицензия
-
-- **Жоба авторы:** [Azamat Perdeev](https://github.com/Azamaperdeev05)
-- **Лицензия:** MIT License
+### Vercel платформасына өндірістік орналастыру
+```bash
+npx vercel --prod
+```
