@@ -1278,18 +1278,37 @@ app.innerHTML = `
         </button>
       </div>
 
-      <!-- State B: Set New Password Form (When ?code=... or recovery session) -->
+      <!-- State B: Set New Password Form (When ?code=..., recovery session or OTP verification) -->
       <div class="toi-modal-body" id="resetNewPassView" style="display:none;">
-        <p class="reset-modal-desc">
+        <p class="reset-modal-desc" id="resetNewPassDesc">
           Аккаунтыңыз үшін жаңа сенімді құпиясөз ойлап табыңыз (кемінде 6 таңба).
         </p>
+
+        <!-- Optional Email input if user arrives directly without known email -->
+        <div class="reset-form-group" id="resetOtpEmailGroup" style="display:none;">
+          <label class="reset-label" for="resetOtpEmailInput">Email пошта</label>
+          <div class="reset-input-wrap">
+            <svg class="reset-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="resetOtpEmailInput" class="reset-input" placeholder="example@gmail.com" autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- 6-digit OTP Code Input -->
+        <div class="reset-form-group" id="resetOtpCodeGroup" style="display:none;">
+          <label class="reset-label" for="resetOtpInput">Поштаға келген 6 таңбалы код (OTP)</label>
+          <div class="reset-input-wrap">
+            <svg class="reset-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="text" id="resetOtpInput" class="reset-input" placeholder="Мысалы: 123456" maxlength="6" autocomplete="one-time-code" inputmode="numeric" />
+          </div>
+        </div>
+
         <div class="reset-form-group">
           <label class="reset-label" for="newPasswordInput">Жаңа құпиясөз</label>
           <div class="reset-input-wrap">
             <svg class="reset-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <input type="password" id="newPasswordInput" class="reset-input" placeholder="Кемінде 6 таңба" autocomplete="new-password" />
             <button type="button" class="reset-eye-btn" id="toggleNewPassEye" aria-label="Құпиясөзді көрсету">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
@@ -1300,7 +1319,7 @@ app.innerHTML = `
             <svg class="reset-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <input type="password" id="confirmPasswordInput" class="reset-input" placeholder="Құпиясөзді қайта теріңіз" autocomplete="new-password" />
             <button type="button" class="reset-eye-btn" id="toggleConfirmPassEye" aria-label="Құпиясөзді көрсету">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
@@ -1310,6 +1329,12 @@ app.innerHTML = `
         <button type="button" id="saveNewPasswordBtn" class="btn btn-primary reset-submit-btn">
           Құпиясөзді сақтау
         </button>
+
+        <div style="text-align: center; margin-top: 10px;">
+          <button type="button" id="backToRequestBtn" style="background:none;border:none;color:#94a3b8;font-size:12px;cursor:pointer;text-decoration:underline;">
+            Басқа email енгізу
+          </button>
+        </div>
       </div>
 
       <!-- State C: Success Message -->
@@ -1807,16 +1832,24 @@ function initPasswordResetFlow() {
   const sendBtn = document.getElementById('sendResetLinkBtn');
   const reqAlert = document.getElementById('resetRequestAlert');
 
+  const otpEmailGroup = document.getElementById('resetOtpEmailGroup');
+  const otpEmailInput = document.getElementById('resetOtpEmailInput');
+  const otpCodeGroup = document.getElementById('resetOtpCodeGroup');
+  const otpInput = document.getElementById('resetOtpInput');
+  const newPassDesc = document.getElementById('resetNewPassDesc');
   const newPassInput = document.getElementById('newPasswordInput');
   const confirmPassInput = document.getElementById('confirmPasswordInput');
   const saveBtn = document.getElementById('saveNewPasswordBtn');
   const newPassAlert = document.getElementById('resetNewPassAlert');
+  const backToRequestBtn = document.getElementById('backToRequestBtn');
   const successCloseBtn = document.getElementById('closeResetSuccessBtn');
 
   const openBtn = document.getElementById('openResetPasswordBtn');
   const footerBtn = document.getElementById('footerResetPasswordBtn');
 
-  function openModal(mode = 'request') {
+  let activeResetEmail = '';
+
+  function openModal(mode = 'request', options = {}) {
     if (!modal) return;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -1824,13 +1857,42 @@ function initPasswordResetFlow() {
     if (newPassAlert) newPassAlert.style.display = 'none';
 
     if (mode === 'newPassword') {
+      const email = options.email || activeResetEmail || '';
+      const hasSession = options.hasSession ?? false;
+
       if (headingEl) headingEl.textContent = 'Жаңа құпиясөз орнату';
       if (requestView) requestView.style.display = 'none';
       if (newPassView) newPassView.style.display = 'flex';
       if (successView) successView.style.display = 'none';
-      setTimeout(() => {
-        if (newPassInput) newPassInput.focus();
-      }, 100);
+
+      if (hasSession) {
+        if (otpCodeGroup) otpCodeGroup.style.display = 'none';
+        if (otpEmailGroup) otpEmailGroup.style.display = 'none';
+        if (newPassDesc) {
+          newPassDesc.textContent = email
+            ? `Расталған аккаунт: ${email}. Жаңа құпиясөзді енгізіңіз (кемінде 6 таңба).`
+            : 'Аккаунтыңыз үшін жаңа сенімді құпиясөз ойлап табыңыз (кемінде 6 таңба).';
+        }
+        setTimeout(() => {
+          if (newPassInput) newPassInput.focus();
+        }, 100);
+      } else {
+        if (otpCodeGroup) otpCodeGroup.style.display = 'flex';
+        if (email) {
+          if (otpEmailGroup) otpEmailGroup.style.display = 'none';
+          if (newPassDesc) {
+            newPassDesc.textContent = `«${email}» поштаңызға 6 таңбалы растау коды жіберілді. Келген код пен жаңа құпиясөзіңізді енгізіңіз:`;
+          }
+        } else {
+          if (otpEmailGroup) otpEmailGroup.style.display = 'flex';
+          if (newPassDesc) {
+            newPassDesc.textContent = 'Email поштаңызды, поштаға келген 6 таңбалы кодты және жаңа құпиясөзді енгізіңіз:';
+          }
+        }
+        setTimeout(() => {
+          if (otpInput) otpInput.focus();
+        }, 100);
+      }
     } else {
       if (headingEl) headingEl.textContent = 'Құпиясөзді қалпына келтіру';
       if (requestView) requestView.style.display = 'flex';
@@ -1861,6 +1923,10 @@ function initPasswordResetFlow() {
   document.querySelectorAll('.open-reset-modal-trigger').forEach(btn => {
     btn.addEventListener('click', () => openModal('request'));
   });
+
+  if (backToRequestBtn) {
+    backToRequestBtn.addEventListener('click', () => openModal('request'));
+  }
 
   // Eye toggles for passwords
   const toggleNewPass = document.getElementById('toggleNewPassEye');
@@ -1897,17 +1963,11 @@ function initPasswordResetFlow() {
         });
         if (error) throw error;
 
-        if (headingEl) headingEl.textContent = 'Сілтеме жіберілді';
-        if (requestView) requestView.style.display = 'none';
-        if (newPassView) newPassView.style.display = 'none';
-        if (successView) successView.style.display = 'flex';
-        const titleEl = document.getElementById('resetSuccessTitle');
-        const descEl = document.getElementById('resetSuccessDesc');
-        if (titleEl) titleEl.textContent = 'Сілтеме сәтті жіберілді!';
-        if (descEl) {
-          descEl.textContent =
-            `«${email}» поштаңызға құпиясөзді қалпына келтіру сілтемесі жіберілді. Поштаңызды және спам папкасын тексеріп, хаттағы сілтемені басыңыз.`;
-        }
+        activeResetEmail = email;
+        if (otpEmailInput) otpEmailInput.value = email;
+
+        // Open new password view with OTP verification immediately
+        openModal('newPassword', { email, hasSession: false });
       } catch (err) {
         reqAlert.className = 'reset-alert error';
         reqAlert.textContent = err.message || 'Сілтеме жіберу кезінде қате орын алды. Қайта тексеріңіз.';
@@ -1944,11 +2004,61 @@ function initPasswordResetFlow() {
       newPassAlert.style.display = 'none';
 
       try {
-        const { error } = await supabase.auth.updateUser({
+        // Step 1: Check if an active session exists
+        let { data: sessData } = await supabase.auth.getSession();
+        let currentSession = sessData?.session;
+
+        // Step 2: If no active session, verify OTP code!
+        if (!currentSession) {
+          const otpVal = otpInput?.value?.trim() || '';
+          const targetEmail = activeResetEmail || otpEmailInput?.value?.trim() || emailInput?.value?.trim() || '';
+
+          if (!targetEmail) {
+            newPassAlert.className = 'reset-alert error';
+            newPassAlert.textContent = 'Email поштаңызды енгізіңіз.';
+            newPassAlert.style.display = 'block';
+            if (otpEmailGroup) otpEmailGroup.style.display = 'flex';
+            return;
+          }
+
+          if (!otpVal || otpVal.length < 6) {
+            newPassAlert.className = 'reset-alert error';
+            newPassAlert.textContent = 'Поштаңызға келген 6 таңбалы растау кодын енгізіңіз.';
+            newPassAlert.style.display = 'block';
+            if (otpCodeGroup) otpCodeGroup.style.display = 'flex';
+            if (otpInput) otpInput.focus();
+            return;
+          }
+
+          const { data: otpData, error: otpErr } = await supabase.auth.verifyOtp({
+            email: targetEmail,
+            token: otpVal,
+            type: 'recovery',
+          });
+
+          if (otpErr) {
+            newPassAlert.className = 'reset-alert error';
+            newPassAlert.textContent = 'Растау коды қате немесе мерзімі өтіп кеткен. Поштаңыздағы соңғы кодты тексеріңіз.';
+            newPassAlert.style.display = 'block';
+            return;
+          }
+
+          currentSession = otpData?.session;
+        }
+
+        // Step 3: Session is verified and active! Update user password
+        const { error: updateErr } = await supabase.auth.updateUser({
           password: newPass,
         });
-        if (error) throw error;
 
+        if (updateErr) {
+          if (updateErr.message && updateErr.message.includes('Auth session missing')) {
+            throw new Error('Сессия табылмады. Поштаңыздағы 6 таңбалы кодты енгізіп, қайталаңыз.');
+          }
+          throw updateErr;
+        }
+
+        // Step 4: Password updated successfully
         if (headingEl) headingEl.textContent = 'Құпиясөз өзгертілді';
         if (requestView) requestView.style.display = 'none';
         if (newPassView) newPassView.style.display = 'none';
@@ -1977,9 +2087,9 @@ function initPasswordResetFlow() {
   }
 
   // Supabase auth state change: listen for PASSWORD_RECOVERY event
-  supabase.auth.onAuthStateChange(async (event) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
-      openModal('newPassword');
+      openModal('newPassword', { email: session?.user?.email, hasSession: true });
     }
   });
 
@@ -1990,29 +2100,59 @@ async function checkAuthConfirmation(resetFlow) {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
   const type = urlParams.get('type');
-  const error = urlParams.get('error_description') || urlParams.get('error');
+  const tokenHash = urlParams.get('token_hash');
   const hash = window.location.hash;
 
-  // Direct trigger via hash or query (e.g. ?type=recovery or #reset-password)
-  if (type === 'recovery' || hash.includes('type=recovery') || hash.includes('reset-password')) {
-    if (!code) {
-      resetFlow.openModal('newPassword');
-      return;
+  // 1. If hash contains access_token and refresh_token
+  if (hash && hash.includes('access_token=')) {
+    try {
+      const hashParams = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash);
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      const hashType = hashParams.get('type');
+      if (accessToken && refreshToken) {
+        const { data, error: sessErr } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (!sessErr && (hashType === 'recovery' || type === 'recovery')) {
+          resetFlow.openModal('newPassword', { email: data?.user?.email, hasSession: true });
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('setSession from hash error:', e);
     }
   }
 
+  // 2. If token_hash exists in query params
+  if (tokenHash) {
+    try {
+      const { data, error: otpErr } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type === 'recovery' ? 'recovery' : 'email',
+      });
+      if (!otpErr && type === 'recovery') {
+        resetFlow.openModal('newPassword', { email: data?.user?.email, hasSession: true });
+        return;
+      }
+    } catch (e) {
+      console.warn('verifyOtp with token_hash error:', e);
+    }
+  }
+
+  // 3. If PKCE code exists in query params
   if (code) {
     try {
       const { data, error: authErr } = await supabase.auth.exchangeCodeForSession(code);
       if (authErr) throw authErr;
 
       if (data?.redirectType === 'recovery' || type === 'recovery') {
-        // This was a password recovery click from email!
-        resetFlow.openModal('newPassword');
+        resetFlow.openModal('newPassword', { email: data?.user?.email, hasSession: true });
         return;
       }
 
-      // Otherwise: Email confirmation for registration
+      // Email registration confirmation notice
       const authSlot = document.getElementById('authNoticeSlot');
       if (authSlot) {
         authSlot.innerHTML = `
@@ -2043,66 +2183,18 @@ async function checkAuthConfirmation(resetFlow) {
           });
         }
       }
+      return;
     } catch (err) {
-      // If code was invalid or already exchanged, check if we have an active session
-      const { data: sessData } = await supabase.auth.getSession();
-      if (type === 'recovery' || hash.includes('type=recovery') || sessData?.session) {
-        resetFlow.openModal('newPassword');
-        return;
-      }
+      console.warn('exchangeCodeForSession error:', err);
+    }
+  }
 
-      const authSlot = document.getElementById('authNoticeSlot');
-      if (authSlot) {
-        authSlot.innerHTML = `
-          <div class="auth-notice-card" id="authNotice" style="border-color: var(--primary);">
-            <div class="auth-notice-header">
-              <span class="auth-badge" style="color: var(--primary); background: rgba(0, 242, 254, 0.15);">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                АККАУНТ ДАЙЫН
-              </span>
-              <button id="closeAuthNotice" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;">&times;</button>
-            </div>
-            <div class="auth-notice-title">Email Мәртебесі Жаңартылды</div>
-            <div class="auth-notice-desc">
-              Сіздің поштаңыз расталды. Енді Toi DJ бағдарламасында тіркелген поштаңыз және құпиясөзіңізбен жүйеге кіре аласыз.
-            </div>
-            <div class="auth-notice-actions">
-              <a href="/Toi DJ.dmg" download class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">
-                Toi DJ Жүктеп алу
-              </a>
-            </div>
-          </div>
-        `;
-        const closeBtn = document.getElementById('closeAuthNotice');
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => {
-            const card = document.getElementById('authNotice');
-            if (card) card.remove();
-          });
-        }
-      }
-    }
-  } else if (error) {
-    const authSlot = document.getElementById('authNoticeSlot');
-    if (authSlot) {
-      authSlot.innerHTML = `
-        <div class="auth-notice-card" id="authNotice" style="border-color: var(--danger);">
-          <div class="auth-notice-header">
-            <span class="auth-badge" style="color: var(--danger); background: rgba(239, 68, 68, 0.15);">ҚАТЕ</span>
-            <button id="closeAuthNotice" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;">&times;</button>
-          </div>
-          <div class="auth-notice-title">Растау сілтемесі ескірген</div>
-          <div class="auth-notice-desc">${error}</div>
-        </div>
-      `;
-      const closeBtn = document.getElementById('closeAuthNotice');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-          const card = document.getElementById('authNotice');
-          if (card) card.remove();
-        });
-      }
-    }
+  // 4. Direct trigger via hash or query (e.g. ?type=recovery or #reset-password)
+  if (type === 'recovery' || hash.includes('type=recovery') || hash.includes('reset-password')) {
+    const { data: sessData } = await supabase.auth.getSession();
+    const hasSession = !!sessData?.session;
+    resetFlow.openModal('newPassword', { email: sessData?.session?.user?.email || '', hasSession });
+    return;
   }
 }
 
