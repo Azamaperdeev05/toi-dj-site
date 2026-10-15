@@ -1918,10 +1918,23 @@ function initPasswordResetFlow() {
     });
   }
 
-  if (openBtn) openBtn.addEventListener('click', () => openModal('request'));
-  if (footerBtn) footerBtn.addEventListener('click', () => openModal('request'));
+  async function handleOpenTrigger() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        openModal('newPassword', { email: session.user?.email, hasSession: true });
+      } else {
+        openModal('request');
+      }
+    } catch (_) {
+      openModal('request');
+    }
+  }
+
+  if (openBtn) openBtn.addEventListener('click', handleOpenTrigger);
+  if (footerBtn) footerBtn.addEventListener('click', handleOpenTrigger);
   document.querySelectorAll('.open-reset-modal-trigger').forEach(btn => {
-    btn.addEventListener('click', () => openModal('request'));
+    btn.addEventListener('click', handleOpenTrigger);
   });
 
   if (backToRequestBtn) {
@@ -1958,6 +1971,9 @@ function initPasswordResetFlow() {
       reqAlert.style.display = 'none';
 
       try {
+        localStorage.setItem('toi_auth_intent', 'password_recovery');
+        localStorage.setItem('toi_recovery_email', email);
+
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: window.location.origin + '/?type=recovery',
         });
@@ -2147,12 +2163,24 @@ async function checkAuthConfirmation(resetFlow) {
       const { data, error: authErr } = await supabase.auth.exchangeCodeForSession(code);
       if (authErr) throw authErr;
 
-      if (data?.redirectType === 'recovery' || type === 'recovery') {
+      // Smart recovery detection:
+      // A) explicit URL type=recovery
+      // B) intent saved in localStorage
+      // C) user has recent recovery_sent_at
+      const storedIntent = localStorage.getItem('toi_auth_intent');
+      const recSentAt = data?.user?.recovery_sent_at ? new Date(data.user.recovery_sent_at).getTime() : 0;
+      const emailConfAt = data?.user?.email_confirmed_at ? new Date(data.user.email_confirmed_at).getTime() : 0;
+      const isRecentRecovery = recSentAt > 0 && (Date.now() - recSentAt < 24 * 3600 * 1000) && (recSentAt >= emailConfAt - 120000);
+
+      const isRecovery = type === 'recovery' || storedIntent === 'password_recovery' || isRecentRecovery;
+
+      if (isRecovery) {
+        localStorage.removeItem('toi_auth_intent');
         resetFlow.openModal('newPassword', { email: data?.user?.email, hasSession: true });
         return;
       }
 
-      // Email registration confirmation notice
+      // If not definitely recovery, show notification card with BOTH new password and download actions
       const authSlot = document.getElementById('authNoticeSlot');
       if (authSlot) {
         authSlot.innerHTML = `
@@ -2164,17 +2192,23 @@ async function checkAuthConfirmation(resetFlow) {
               </span>
               <button id="closeAuthNotice" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;">&times;</button>
             </div>
-            <div class="auth-notice-title">Email Поштаңыз Сәтті Расталды!</div>
+            <div class="auth-notice-title">Аккаунтыңыз Сәтті Расталды!</div>
             <div class="auth-notice-desc">
-              Toi DJ жүйесіндегі аккаунтыңыз белсендірілді (${data?.user?.email || ''}). 30 күндік сынақ мерзімін пайдалану үшін бағдарламаны ашып, кіріңіз.
+              Toi DJ жүйесіндегі аккаунтыңыз белсендірілді (${data?.user?.email || ''}). Егер құпиясөзді ауыстыруға келсеңіз, төмендегі батырманы басыңыз.
             </div>
-            <div class="auth-notice-actions">
-              <a href="/Toi DJ.dmg" download class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">
-                Toi DJ Жүктеп алу
+            <div class="auth-notice-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <button type="button" id="cardResetPassBtn" class="btn btn-primary" style="font-size: 13px; padding: 8px 16px; background:#00bfea; color:#000;">
+                Жаңа құпиясөз орнату
+              </button>
+              <a href="/Toi DJ.dmg" download class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px; border:1px solid rgba(255,255,255,0.2);">
+                Жүктеп алу
               </a>
             </div>
           </div>
         `;
+        document.getElementById('cardResetPassBtn')?.addEventListener('click', () => {
+          resetFlow.openModal('newPassword', { email: data?.user?.email, hasSession: true });
+        });
         const closeBtn = document.getElementById('closeAuthNotice');
         if (closeBtn) {
           closeBtn.addEventListener('click', () => {
