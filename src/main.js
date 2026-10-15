@@ -1011,10 +1011,14 @@ app.innerHTML = `
               <span class="os-spec-val">M1 / M2 / M3 / M4 және Intel 64-бит</span>
             </div>
           </div>
-          <div class="os-card-actions">
-            <a href="/Toi DJ.dmg" download class="btn btn-primary os-btn" id="macDownloadDirect">
+          <div class="os-card-actions" style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="/Toi DJ-macOS-arm64.dmg" download class="btn btn-primary os-btn" id="macDownloadArm">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              <span>macOS (.dmg) Жүктеу</span>
+              <span>Apple Silicon (M1/M2/M3/M4) (.dmg)</span>
+            </a>
+            <a href="/Toi DJ-macOS-x64.dmg" download class="btn btn-outline os-btn" id="macDownloadIntel" style="font-size: 13px; padding: 10px 14px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Intel 64-бит (x86_64) (.dmg)</span>
             </a>
           </div>
         </div>
