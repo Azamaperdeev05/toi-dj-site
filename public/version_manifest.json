@@ -1,0 +1,12 @@
+{
+  "version": "1.1.0",
+  "buildNumber": 2,
+  "releaseDate": "2026-10-15",
+  "mandatory": false,
+  "fileSizeMb": 14.0,
+  "downloadUrlMac": "https://toidj.vercel.app/Toi%20DJ.dmg",
+  "downloadUrlMacArm64": "https://toidj.vercel.app/Toi%20DJ-macOS-arm64.dmg",
+  "downloadUrlMacX64": "https://toidj.vercel.app/Toi%20DJ-macOS-x64.dmg",
+  "downloadUrlWindows": "https://toidj.vercel.app/Toi%20DJ.dmg",
+  "releaseNotes": "1. .toi форматы: Плейлисттер мен 64-сэмплер банкін толық сақтау және қалпына келтіру.\n2. Флешкамен автоматты синхрондау: Басты музыка қалтасындағы жасырын .toidj_manifest.toi файлы.\n3. Бос орын сақтау (Vacancy Preservation): Музыка өшсе де диджей реттілігі бұзылмайды.\n4. macOS Apple Silicon (ARM64) және Intel (x64) үшін бөлек оңтайландырылған DMG құрастырылымдары."
+}
