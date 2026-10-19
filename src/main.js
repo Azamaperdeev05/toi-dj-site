@@ -204,8 +204,9 @@ document.querySelector('#app').innerHTML = `
         <a class="btn btn-ghost" href="#download">Жүктеу</a>
       </div>
       <div class="plan plan-pro">
-        <h3>PRO</h3>
-        <p class="price">25 000 ₸ <small>бір рет</small></p>
+        <h3>PRO <span class="offer">Алғашқы 10 пайдаланушыға</span></h3>
+        <p class="price">15 000 ₸ <small>бір рет</small></p>
+        <p class="price-later">11-ші пайдаланушыдан бастап — 29 990 ₸</p>
         <ul><li>Мерзімсіз, барлық мүмкіндіктер</li><li>Жаңартулар тегін</li><li>Басқа ноутбукке көшіру</li><li>WhatsApp арқылы қолдау</li></ul>
         <a class="btn btn-primary" href="${WHATSAPP}" target="_blank" rel="noopener">WhatsApp арқылы алу</a>
       </div>

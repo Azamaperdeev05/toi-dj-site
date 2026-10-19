@@ -279,6 +279,8 @@ input[type='range'] { width: 112px; accent-color: var(--accent); }
 .plan h3 { font-size: 15px; color: var(--text-2); font-weight: 600; }
 .price { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; }
 .price small { font-size: 15px; color: var(--text-3); font-weight: 500; letter-spacing: 0; }
+.offer { margin-left: 8px; font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-tint); padding: 2px 8px; border-radius: 999px; vertical-align: middle; }
+.price-later { margin-top: -10px; color: var(--text-3); font-size: 14px; }
 .plan ul { display: grid; gap: 8px; color: var(--text-2); font-size: 15px; flex: 1; }
 .plan li::before { content: '✓'; color: var(--accent); margin-right: 10px; }
 
