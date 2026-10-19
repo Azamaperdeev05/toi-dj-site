@@ -157,6 +157,7 @@ document.querySelector('#app').innerHTML = `
 
 <main>
   <section class="hero">
+    <canvas class="hero-fx" aria-hidden="true"></canvas>
     <p class="eyebrow">macOS · Windows</p>
     <h1>Тойды бір терезеден басқарыңыз</h1>
     <p class="lead">Плейлист, 64 пэдті сэмплер және телефон пульті — той жүргізуге арналған DJ ойнатқыш.</p>
@@ -262,6 +263,7 @@ playBtn.addEventListener('click', () => {
 });
 $('#stopBtn').addEventListener('click', () => { track.pause(); track.currentTime = 0; });
 ['play', 'pause', 'ended'].forEach((e) => track.addEventListener(e, setPlayIcon));
+['play', 'pause', 'ended'].forEach((e) => track.addEventListener(e, () => heroFx?.update('wave', { amplitude: track.paused ? 0.35 : 1 })));
 track.addEventListener('timeupdate', () => {
   const d = track.duration || 0;
   const pct = d ? (track.currentTime / d) * 100 : 0;
@@ -335,6 +337,47 @@ const os = /Mac/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'mac' : /Windows/i.test
 if (os) $(`.dl[data-os="${os}"]`)?.classList.add('recommended');
 if (location.pathname.replace(/\/+$/, '') === '/download') {
   requestAnimationFrame(() => $('#download').scrollIntoView());
+}
+
+// ---------- Әсемдік: hero фонындағы эквалайзер толқыны (shaders кітапханасы, WebGPU) ----------
+// Кітапхана ауыр (~700 KB gzip), сондықтан бет толық жүктелген соң ғана, тек WebGPU бар және
+// "қозғалысты азайту" өшік болғанда жүктеледі. Болмаса фон жай қалады — бет бәрібір толық жұмыс істейді.
+// Телеметрия (shaders.com-ға браузер мәліметтерін жіберу) өшірілген.
+let heroFx = null;
+if ('gpu' in navigator && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const startFx = async () => {
+    try {
+      const { createShader, isWebGPUSupported } = await import('shaders/js');
+      if (!isWebGPUSupported()) return;
+      const canvas = $('.hero-fx');
+      heroFx = await createShader(
+        canvas,
+        {
+          components: [{
+            type: 'Waveform',
+            id: 'wave',
+            props: {
+              style: 'bars',
+              colorA: '#103540',
+              colorB: '#00d4f5',
+              // Эквалайзер hero-ның төменгі жиегінен жоғары өседі — мәтін мен батырмаларға тимейді.
+              from: { x: 0, y: 1 },
+              to: { x: 1, y: 1 },
+              align: 'top',
+              amplitude: track.paused ? 0.35 : 1,
+              height: 0.3,
+            },
+          }],
+        },
+        { disableTelemetry: true, observeElement: true },
+      );
+      canvas.classList.add('on');
+    } catch (err) {
+      console.info('Hero shader өшірулі:', err?.message ?? err);
+    }
+  };
+  if (document.readyState === 'complete') startFx();
+  else addEventListener('load', startFx, { once: true });
 }
 
 // Құпиясөзді қалпына келтіру: бет салынғаннан кейін (футердегі батырма табылуы үшін) және бөлек жүктеледі.
