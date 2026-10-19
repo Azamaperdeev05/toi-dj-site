@@ -496,7 +496,7 @@ async function checkAuthConfirmation(resetFlow) {
               <button type="button" id="cardResetPassBtn" class="btn btn-primary" style="font-size: 13px; padding: 8px 16px; background:#00bfea; color:#000;">
                 Жаңа құпиясөз орнату
               </button>
-              <a href="/Toi DJ.dmg" download class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px; border:1px solid rgba(255,255,255,0.2);">
+              <a href="/Toi DJ-macOS-Universal.dmg" download class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px; border:1px solid rgba(255,255,255,0.2);">
                 Жүктеп алу
               </a>
             </div>

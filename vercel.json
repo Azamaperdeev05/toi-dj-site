@@ -18,5 +18,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/Toi DJ.dmg",
+      "destination": "/Toi DJ-macOS-Universal.dmg",
+      "permanent": false
+    }
   ]
 }
