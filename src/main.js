@@ -1,6 +1,7 @@
 import './style.css';
 
-const WHATSAPP = 'https://wa.me/77478501822?text=' + encodeURIComponent('Сәлеметсіз бе! TOI DJ PRO лицензиясы туралы сұрағым бар.');
+const wa = (text) => 'https://wa.me/77478501822?text=' + encodeURIComponent(text);
+const WHATSAPP = wa('Сәлеметсіз бе! TOI DJ PRO лицензиясы туралы сұрағым бар.');
 
 // Демо: сайттағы пэдтер нақты дыбыс шығарады (public/audio). Атаулар — бағдарламадағы банктен.
 const PADS = [
@@ -195,22 +196,39 @@ document.querySelector('#app').innerHTML = `
   </section>
 
   <section id="pricing" class="section" aria-labelledby="pricing-title">
-    <h2 id="pricing-title">Баға</h2>
+    <h2 id="pricing-title">Бір рет төлейсіз — мәңгі сіздікі</h2>
+    <p class="lead">Ай сайынғы жазылым жоқ. Алдымен 30 күн тегін сынап көріңіз — ұнаса ғана сатып аласыз.</p>
     <div class="plans">
       <div class="plan">
         <h3>Сынақ</h3>
-        <p class="price">0 ₸ <small>30 күн</small></p>
+        <p class="price">0 ₸</p>
+        <p class="price-note">30 күн, карта керек емес</p>
         <ul><li>Барлық мүмкіндіктер</li><li>Google аккаунтымен кіру</li><li>Бір компьютерге</li></ul>
-        <a class="btn btn-ghost" href="#download">Жүктеу</a>
+        <a class="btn btn-ghost" href="#download">Тегін жүктеу</a>
       </div>
-      <div class="plan plan-pro">
-        <h3>PRO <span class="offer">Алғашқы 10 пайдаланушыға</span></h3>
-        <p class="price">15 000 ₸ <small>бір рет</small></p>
-        <p class="price-later">11-ші пайдаланушыдан бастап — 29 990 ₸</p>
-        <ul><li>Мерзімсіз, барлық мүмкіндіктер</li><li>Жаңартулар тегін</li><li>Басқа ноутбукке көшіру</li><li>WhatsApp арқылы қолдау</li></ul>
-        <a class="btn btn-primary" href="${WHATSAPP}" target="_blank" rel="noopener">WhatsApp арқылы алу</a>
+      <div class="plan">
+        <h3>PRO <span class="offer">Алғашқы 10 адамға</span></h3>
+        <p class="price">15 000 ₸</p>
+        <p class="price-note">бір рет · кейін <b>29 990 ₸</b></p>
+        <ul><li>Мерзімсіз лицензия</li><li>Барлық жаңартулар тегін</li><li>Жаңа ноутбукке көшіру</li><li>WhatsApp арқылы қолдау</li></ul>
+        <a class="btn btn-ghost" href="${wa('Сәлеметсіз бе! TOI DJ PRO лицензиясын алғым келеді.')}" target="_blank" rel="noopener">PRO алу</a>
+      </div>
+      <div class="plan plan-pack">
+        <span class="ribbon">Ұсынамыз</span>
+        <h3>PRO + Дайын пак</h3>
+        <p class="price">49 900 ₸</p>
+        <p class="price-note">бір рет · бағдарлама мен музыка бірге</p>
+        <p class="pack-pitch">Ашасыз да, той жүргізесіз: музыка іздеп, жинап, реттеп апталап отырудың қажеті жоқ.</p>
+        <ul>
+          <li><span><b>PRO лицензиясы</b> — оның бәрі кіреді</span></li>
+          <li>Той кезеңдері бойынша реттелген дайын плейлисттер</li>
+          <li>Отбивка, туш, шапалақ — толтырылған пэд банктері</li>
+          <li><span>Бір <b>.toi</b> файлы: бір рет ашсаңыз, бәрі орнына түседі</span></li>
+        </ul>
+        <a class="btn btn-primary" href="${wa('Сәлеметсіз бе! TOI DJ «PRO + Дайын пак» (49 900 ₸) алғым келеді.')}" target="_blank" rel="noopener">Дайын пакты алу</a>
       </div>
     </div>
+    <p class="pay-note">Төлем мен кілт WhatsApp арқылы. Кілтті бағдарламадағы «Кілт енгізу» батырмасына енгізесіз — лицензия бірден қосылады.</p>
   </section>
 
   <section id="download" class="section" aria-labelledby="download-title">
