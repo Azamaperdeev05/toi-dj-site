@@ -1,0 +1,410 @@
+.sampler-preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #141b22;
+  border: 1px solid #00e5ff;
+  border-radius: 3px;
+  color: #00e5ff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sampler-btn-action.reset-btn {
+  background: rgba(0, 229, 255, 0.08);
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+
+/* Modal Dialogs */
+.toi-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.toi-modal-card {
+  background: #202328;
+  border: 1px solid #3b4048;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 191, 234, 0.15);
+  overflow: hidden;
+  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toi-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #17191d;
+  border-bottom: 1px solid #3b4048;
+}
+
+.toi-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #00bfea;
+}
+
+.toi-modal-close {
+  background: none;
+  border: none;
+  color: #9ba1ab;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.toi-modal-body {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.toi-modal-footer {
+  padding: 10px 16px;
+  background: #17191d;
+  border-top: 1px solid #3b4048;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 990px) {
+  .nav-reset-btn {
+    height: 38px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 580px) {
+  .nav-reset-btn span {
+    display: none;
+  }
+  .nav-reset-btn {
+    padding: 0 10px;
+  }
+}
+
+/* ========================================================================= */
+/* PASSWORD RESET MODAL & BUTTON STYLES (MOBBIN SPEC)                        */
+/* ========================================================================= */
+.nav-reset-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-reset-btn span {
+  color: inherit;
+}
+
+.nav-reset-btn svg {
+  stroke: currentColor;
+}
+
+.nav-reset-btn:hover {
+  background: rgba(0, 242, 254, 0.08);
+  border-color: rgba(0, 242, 254, 0.4);
+  color: #00f2fe;
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .nav-reset-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .nav-reset-btn span {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .nav-reset-btn svg {
+  stroke: #0f172a !important;
+}
+
+[data-theme="light"] .nav-reset-btn:hover {
+  background: #f8fafc;
+  border-color: #0066ff;
+  color: #0066ff !important;
+}
+
+[data-theme="light"] .nav-reset-btn:hover span {
+  color: #0066ff !important;
+}
+
+[data-theme="light"] .nav-reset-btn:hover svg {
+  stroke: #0066ff !important;
+}
+
+.reset-modal-card {
+  max-width: 440px;
+  background: #15181f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px; /* Mobbin rounded.md */
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 191, 234, 0.2);
+}
+
+.reset-modal-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #9ba1ab;
+  margin: 0 0 4px 0;
+}
+
+.reset-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reset-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #00bfea;
+}
+
+.reset-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.reset-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.reset-input {
+  width: 100%;
+  height: 46px;
+  background: #0f1217;
+  border: 1px solid #2d3440;
+  border-radius: 12px;
+  padding: 0 42px 0 40px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.reset-input:focus {
+  outline: none;
+  border-color: #00bfea;
+  box-shadow: 0 0 0 3px rgba(0, 191, 234, 0.18);
+  background: #12161d;
+}
+
+.reset-input::placeholder {
+  color: #4b5563;
+}
+
+.reset-eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.reset-eye-btn:hover {
+  color: #00bfea;
+}
+
+.reset-alert {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.reset-alert.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.reset-alert.success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+.reset-alert.info {
+  background: rgba(0, 191, 234, 0.12);
+  border: 1px solid rgba(0, 191, 234, 0.4);
+  color: #7dd3fc;
+}
+
+.reset-submit-btn {
+  width: 100%;
+  height: 46px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-full); /* Mobbin stadium-pill */
+  justify-content: center;
+}
+
+.reset-success-box {
+  text-align: center;
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.reset-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.25);
+}
+
+.reset-success-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.reset-success-desc {
+  font-size: 13.5px;
+  color: #9ba1ab;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 340px;
+}
+
+[data-theme="light"] .reset-modal-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .toi-modal-header {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .toi-modal-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .toi-modal-title span {
+  color: #0f172a;
+}
+
+[data-theme="light"] .toi-modal-title svg {
+  stroke: var(--primary);
+}
+
+[data-theme="light"] .toi-modal-close {
+  color: #64748b;
+}
+
+[data-theme="light"] .toi-modal-close:hover {
+  color: #0f172a;
+}
+
+[data-theme="light"] .reset-modal-desc {
+  color: #475569;
+}
+
+[data-theme="light"] .reset-label {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+[data-theme="light"] .reset-input {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .reset-input:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+}
+
+[data-theme="light"] .reset-input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .reset-input-icon {
+  color: #64748b;
+}
+
+[data-theme="light"] .reset-eye-btn {
+  color: #64748b;
+}
+
+[data-theme="light"] .reset-eye-btn:hover {
+  color: #0f172a;
+}
+
+[data-theme="light"] .reset-submit-btn {
+  background: #141414;
+  color: #ffffff;
+}
+
+[data-theme="light"] .reset-submit-btn:hover {
+  background: #262626;
+  color: #ffffff;
+}
+
+[data-theme="light"] .reset-success-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .reset-success-desc {
+  color: #475569;
+}
