@@ -21,7 +21,7 @@
   ],
   "redirects": [
     {
-      "source": "/Toi DJ.dmg",
+      "source": "/Toi%20DJ.dmg",
       "destination": "/Toi DJ-macOS-Universal.dmg",
       "permanent": false
     }
